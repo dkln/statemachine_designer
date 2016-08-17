@@ -1,0 +1,34 @@
+{
+  "name": "statemachine_designer",
+  "version": "1.0.0",
+  "description": "React Statemachine Designer UI component",
+  "main": "index.js",
+  "devDependencies": {
+    "babel-brunch": "~6.0.0",
+    "babel-preset-react": "~6.11.1",
+    "brunch": "2.8.2",
+    "css-brunch": "~2.0.0",
+    "jquery": "~> 3.1.0",
+    "javascript-brunch": "~2.0.0",
+    "react": "~15.3.0",
+    "react-dom": "~15.2.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkln/statemachine_designer.git"
+  },
+  "keywords": [
+    "statemachine",
+    "react",
+    "js"
+  ],
+  "author": "Diederick Lawson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dkln/statemachine_designer/issues"
+  },
+  "homepage": "https://github.com/dkln/statemachine_designer#readme"
+}
