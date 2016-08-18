@@ -8,6 +8,7 @@
     "babel-preset-react": "~6.11.1",
     "brunch": "2.8.2",
     "css-brunch": "~2.0.0",
+    "sass-brunch": "~2.6.3",
     "jquery": "~> 3.1.0",
     "javascript-brunch": "~2.0.0",
     "react": "~15.3.0",
