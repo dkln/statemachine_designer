@@ -33,15 +33,16 @@ exports.config = {
   // Configure your plugins
   plugins: {
     babel: {
-      presets: [ 'react' ]
+      presets: [ "react", "es2015", "es2016" ]
     }
   },
 
   modules: {
-    wrapper: false
+    wrapper: false,
+    definition: false
   },
 
   npm: {
-    enabled: true
+    enabled: false
   }
 };

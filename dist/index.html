@@ -3,8 +3,17 @@
   <head>
     <script src="../node_modules/jquery/dist/jquery.js"></script>
     <script src="../node_modules/react/dist/react.js"></script>
+    <script src="../node_modules/react-dom/dist/react-dom.js"></script>
     <script src="js/statemachine_designer.js"></script>
   </head>
   <body>
+    <div id="statemachine-designer" >
+
+    <script type="text/javascript">
+      var element = document.getElementById("statemachine-designer");
+      var props = {};
+
+      ReactDOM.render(React.createElement(StatemachineDesigner, props), element);
+    </script>
   </body>
 </html>
