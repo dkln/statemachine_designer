@@ -2,7 +2,7 @@
   "name": "statemachine_designer",
   "version": "1.0.0",
   "description": "React Statemachine Designer UI component",
-  "main": "index.js",
+  "main": "dist/statemachine_designer.js",
   "devDependencies": {
     "babel-brunch": "~6.0.0",
     "babel-preset-react": "~6.11.1",
