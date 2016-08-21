@@ -20,27 +20,46 @@ var StatemachineDesigner = function (_React$Component) {
 
     // test
     _this.state.nodes = [{ x: 100, y: 100, name: "New" }, { x: 200, y: 100, name: "Detected" }];
+
+    _this.state.transitions = [{ nodeFrom: 0, nodeTo: 1 }, { nodeTo: 1, nodeFrom: 0 }];
     return _this;
   }
 
   _createClass(StatemachineDesigner, [{
+    key: "handleNodeChange",
+    value: function handleNodeChange(nodeIndex, x, y) {
+      var nodes = this.state.nodes;
+
+      nodes[nodeIndex].x = x;
+      nodes[nodeIndex].y = y;
+
+      this.setState({ nodes: nodes });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var nodes = null;
-      var transitions = null;
+      var _this2 = this;
+
+      var nodes;
+      var transitions;
 
       nodes = this.state.nodes.map(function (node, index) {
         return React.createElement(StatemachineDesigner.Node, {
           key: "node-" + index,
-          name: node.name,
-          x: node.x,
-          y: node.y
-        });
+          node: node,
+          onNodeChange: _this2.handleNodeChange.bind(_this2, index) });
+      });
+
+      transitions = this.state.transitions.map(function (transition, index) {
+        return React.createElement(StatemachineDesigner.Transition, {
+          key: "transition-" + index,
+          nodeFrom: _this2.state.nodes[transition.nodeFrom],
+          nodeTo: _this2.state.nodes[transition.nodeTo] });
       });
 
       return React.createElement(
-        "div",
-        { className: "smd-canvas" },
+        "svg",
+        { className: "smd-canvas", width: 640, height: 480 },
         transitions,
         nodes
       );
@@ -68,11 +87,9 @@ StatemachineDesigner.Node = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, props));
 
     _this.state = {
-      name: props.name,
-      x: props.x,
-      y: props.y,
-      dragging: false,
-      editing: false
+      width: 75,
+      height: 25,
+      node: props.node
     };
 
     // messy js scope bindings
@@ -94,8 +111,8 @@ StatemachineDesigner.Node = function (_React$Component) {
         // keep the offset of the mousedrag start
         this.dragStartX = event.pageX;
         this.dragStartY = event.pageY;
-        this.nodeStartX = this.state.x;
-        this.nodeStartY = this.state.y;
+        this.nodeStartX = this.state.node.x;
+        this.nodeStartY = this.state.node.y;
 
         this.addDragEventListeners();
         this.setState({ dragging: true });
@@ -109,10 +126,7 @@ StatemachineDesigner.Node = function (_React$Component) {
       var diffX = event.pageX - this.dragStartX;
       var diffY = event.pageY - this.dragStartY;
 
-      this.setState({
-        x: this.nodeStartX + diffX,
-        y: this.nodeStartY + diffY
-      });
+      this.props.onNodeChange(this.nodeStartX + diffX, this.nodeStartY + diffY);
     }
   }, {
     key: "handleDoubleClick",
@@ -156,41 +170,69 @@ StatemachineDesigner.Node = function (_React$Component) {
       return className;
     }
   }, {
-    key: "getStyle",
-    value: function getStyle() {
-      return { left: this.state.x, top: this.state.y };
-    }
-  }, {
-    key: "getLabel",
-    value: function getLabel() {
-      if (this.state.editing) {
-        return React.createElement("input", {
-          type: "text",
-          value: this.state.name,
-          onChange: this.handleChange.bind(this),
-          className: "smd-node-input"
-        });
-      } else {
-        return React.createElement(
-          "span",
-          null,
-          this.state.name
-        );
-      }
-    }
-  }, {
     key: "render",
     value: function render() {
       return React.createElement(
-        "div",
+        "svg",
         {
-          ref: "node",
+          x: this.state.node.x,
+          y: this.state.node.y,
           className: this.getClassName(),
-          style: this.getStyle(),
           onDoubleClick: this.handleDoubleClick.bind(this),
           onMouseDown: this.handleMouseDown.bind(this) },
-        this.getLabel()
+        React.createElement("rect", {
+          x: 0.5,
+          y: 0.5,
+          rx: 5,
+          ry: 5,
+          width: this.state.width,
+          height: this.state.height,
+          fill: this.state.dragging ? "black" : "white",
+          stroke: "black",
+          strokeWidth: "1" }),
+        React.createElement(
+          "text",
+          {
+            x: this.state.width / 2,
+            y: this.state.height / 2,
+            fontSize: 12,
+            alignmentBaseline: "middle",
+            fill: this.state.dragging ? "white" : "black",
+            textAnchor: "middle" },
+          this.state.node.name
+        )
       );
+    }
+  }]);
+
+  return _class;
+}(React.Component);
+;"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+StatemachineDesigner.Transition = function (_React$Component) {
+  _inherits(_class, _React$Component);
+
+  function _class(props) {
+    _classCallCheck(this, _class);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, props));
+
+    _this.state = {};
+    return _this;
+  }
+
+  _createClass(_class, [{
+    key: "render",
+    value: function render() {
+      return React.createElement("div", null);
     }
   }]);
 

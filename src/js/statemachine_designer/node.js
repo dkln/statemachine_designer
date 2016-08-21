@@ -3,12 +3,10 @@ StatemachineDesigner.Node = class extends React.Component {
     super(props);
 
     this.state = {
-      name:       props.name,
-      x:          props.x,
-      y:          props.y,
-      dragging:   false,
-      editing:    false
-    };
+      width: 75,
+      height: 25,
+      node: props.node
+    }
 
     // messy js scope bindings
     this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -25,8 +23,8 @@ StatemachineDesigner.Node = class extends React.Component {
       // keep the offset of the mousedrag start
       this.dragStartX = event.pageX;
       this.dragStartY = event.pageY;
-      this.nodeStartX = this.state.x;
-      this.nodeStartY = this.state.y;
+      this.nodeStartX = this.state.node.x;
+      this.nodeStartY = this.state.node.y;
 
       this.addDragEventListeners();
       this.setState({ dragging: true });
@@ -39,10 +37,7 @@ StatemachineDesigner.Node = class extends React.Component {
     var diffX = event.pageX - this.dragStartX;
     var diffY = event.pageY - this.dragStartY;
 
-    this.setState({
-      x: this.nodeStartX + diffX,
-      y: this.nodeStartY + diffY
-    });
+    this.props.onNodeChange(this.nodeStartX + diffX, this.nodeStartY + diffY);
   }
 
   handleDoubleClick(event) {
@@ -82,41 +77,37 @@ StatemachineDesigner.Node = class extends React.Component {
     return className;
   }
 
-  getStyle() {
-    return { left: this.state.x, top: this.state.y };
-  }
-
-  getLabel() {
-    if(this.state.editing) {
-      return (
-        <input
-          type="text"
-          value={this.state.name}
-          onChange={this.handleChange.bind(this)}
-          className="smd-node-input"
-        />
-      );
-
-    } else {
-      return (
-        <span>{this.state.name}</span>
-      );
-
-    }
-  }
-
   render() {
     return (
-      <div
-        ref="node"
+      <svg
+        x={this.state.node.x}
+        y={this.state.node.y}
         className={this.getClassName()}
-        style={this.getStyle()}
         onDoubleClick={this.handleDoubleClick.bind(this)}
         onMouseDown={this.handleMouseDown.bind(this)}>
 
-        {this.getLabel()}
+        <rect
+          x={0.5}
+          y={0.5}
+          rx={5}
+          ry={5}
+          width={this.state.width}
+          height={this.state.height}
+          fill={this.state.dragging ? "black" : "white"}
+          stroke="black"
+          strokeWidth="1" />
 
-      </div>
+        <text
+          x={this.state.width / 2}
+          y={this.state.height / 2}
+          fontSize={12}
+          alignmentBaseline="middle"
+          fill={this.state.dragging ? "white" : "black"}
+          textAnchor="middle">
+          {this.state.node.name}
+        </text>
+
+      </svg>
     );
   }
 }
