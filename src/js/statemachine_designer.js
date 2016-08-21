@@ -14,9 +14,14 @@ class StatemachineDesigner extends React.Component {
     var states = null;
     var transitions = null;
 
-    states = this.state.states.map(function(state) {
+    states = this.state.states.map(function(state, index) {
       return (
-        <StatemachineDesigner.State name={state.name} x={state.x} y={state.y} />
+        <StatemachineDesigner.State
+          key={`state-${index}`}
+          name={state.name}
+          x={state.x}
+          y={state.y}
+        />
       );
     });
 

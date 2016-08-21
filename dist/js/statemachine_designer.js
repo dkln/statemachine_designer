@@ -29,8 +29,13 @@ var StatemachineDesigner = function (_React$Component) {
       var states = null;
       var transitions = null;
 
-      states = this.state.states.map(function (state) {
-        return React.createElement(StatemachineDesigner.State, { name: state.name, x: state.x, y: state.y });
+      states = this.state.states.map(function (state, index) {
+        return React.createElement(StatemachineDesigner.State, {
+          key: "state-" + index,
+          name: state.name,
+          x: state.x,
+          y: state.y
+        });
       });
 
       return React.createElement(
@@ -62,16 +67,84 @@ StatemachineDesigner.State = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, props));
 
-    _this.state = { name: props.name };
+    _this.state = {
+      name: props.name,
+      x: props.x,
+      y: props.y,
+      dragStart: false,
+      dragging: false
+    };
+
+    // messy js scope bindings
+    _this.handleMouseUp = _this.handleMouseUp.bind(_this);
+    _this.handleMouseMove = _this.handleMouseMove.bind(_this);
     return _this;
   }
 
   _createClass(_class, [{
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      document.removeEventListener("mouseup", this.handleMouseUp);
+      document.removeEventListener("mousemove", this.handleMouseMove);
+    }
+  }, {
+    key: "handleMouseDown",
+    value: function handleMouseDown(event) {
+      if (!this.state.dragging) {
+        this.addDragEventListeners();
+        this.setState({ dragging: true });
+      }
+    }
+  }, {
+    key: "handleMouseMove",
+    value: function handleMouseMove(event) {
+      if (!this.state.dragging) return;
+    }
+  }, {
+    key: "handleMouseUp",
+    value: function handleMouseUp(event) {
+      if (this.state.dragging) {
+        this.removeDragEventListeners();
+        this.setState({ dragging: false });
+      }
+    }
+  }, {
+    key: "addDragEventListeners",
+    value: function addDragEventListeners() {
+      document.addEventListener("mousemove", this.handleMouseMove, false);
+      document.addEventListener("mouseup", this.handleMouseUp, false);
+    }
+  }, {
+    key: "removeDragEventListeners",
+    value: function removeDragEventListeners() {
+      document.removeEventListener("mousemove", this.handleMouseMove, false);
+      document.removeEventListener("mouseup", this.handleMouseUp);
+    }
+  }, {
+    key: "getClassName",
+    value: function getClassName() {
+      var className = "smd-state";
+
+      if (this.state.dragging) {
+        className += " smd-state--dragging";
+      }
+
+      return className;
+    }
+  }, {
+    key: "getStyle",
+    value: function getStyle() {
+      return { left: this.state.x, top: this.state.y };
+    }
+  }, {
     key: "render",
     value: function render() {
       return React.createElement(
         "div",
-        { className: "smd-state" },
+        {
+          className: this.getClassName(),
+          style: this.getStyle(),
+          onMouseDown: this.handleMouseDown.bind(this) },
         this.state.name
       );
     }
