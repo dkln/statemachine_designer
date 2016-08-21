@@ -9,10 +9,10 @@
 .smd-canvas
   position: relative
 
-.smd-state
+.smd-node
   @include smd-no-selection
   position: absolute
-  width: 75px
+  min-width: 75px
   border-radius: 75px
   border: 1px solid black
   padding: 10px
@@ -21,6 +21,15 @@
   background: white
   cursor: pointer
 
-.smd-state--dragging
+.smd-node--dragging
   background: black
   color: white
+
+.smd-node--editing
+  background: gray
+
+.smd-node-input
+  text-align: center
+  padding: 5px
+  width: auto
+  border: none

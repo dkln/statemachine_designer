@@ -16,25 +16,25 @@ var StatemachineDesigner = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(StatemachineDesigner).call(this, props));
 
-    _this.state = { states: [], transitions: [] };
+    _this.state = { nodes: [], transitions: [] };
 
     // test
-    _this.state.states = [{ x: 100, y: 100, name: "New" }, { x: 200, y: 100, name: "Detected" }];
+    _this.state.nodes = [{ x: 100, y: 100, name: "New" }, { x: 200, y: 100, name: "Detected" }];
     return _this;
   }
 
   _createClass(StatemachineDesigner, [{
     key: "render",
     value: function render() {
-      var states = null;
+      var nodes = null;
       var transitions = null;
 
-      states = this.state.states.map(function (state, index) {
-        return React.createElement(StatemachineDesigner.State, {
-          key: "state-" + index,
-          name: state.name,
-          x: state.x,
-          y: state.y
+      nodes = this.state.nodes.map(function (node, index) {
+        return React.createElement(StatemachineDesigner.Node, {
+          key: "node-" + index,
+          name: node.name,
+          x: node.x,
+          y: node.y
         });
       });
 
@@ -42,7 +42,7 @@ var StatemachineDesigner = function (_React$Component) {
         "div",
         { className: "smd-canvas" },
         transitions,
-        states
+        nodes
       );
     }
   }]);
@@ -59,7 +59,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-StatemachineDesigner.State = function (_React$Component) {
+StatemachineDesigner.Node = function (_React$Component) {
   _inherits(_class, _React$Component);
 
   function _class(props) {
@@ -71,8 +71,8 @@ StatemachineDesigner.State = function (_React$Component) {
       name: props.name,
       x: props.x,
       y: props.y,
-      dragStart: false,
-      dragging: false
+      dragging: false,
+      editing: false
     };
 
     // messy js scope bindings
@@ -90,7 +90,13 @@ StatemachineDesigner.State = function (_React$Component) {
   }, {
     key: "handleMouseDown",
     value: function handleMouseDown(event) {
-      if (!this.state.dragging) {
+      if (!this.state.editing && !this.state.dragging) {
+        // keep the offset of the mousedrag start
+        this.dragStartX = event.pageX;
+        this.dragStartY = event.pageY;
+        this.nodeStartX = this.state.x;
+        this.nodeStartY = this.state.y;
+
         this.addDragEventListeners();
         this.setState({ dragging: true });
       }
@@ -98,15 +104,33 @@ StatemachineDesigner.State = function (_React$Component) {
   }, {
     key: "handleMouseMove",
     value: function handleMouseMove(event) {
-      if (!this.state.dragging) return;
+      if (this.state.editing || !this.state.dragging) return;
+
+      var diffX = event.pageX - this.dragStartX;
+      var diffY = event.pageY - this.dragStartY;
+
+      this.setState({
+        x: this.nodeStartX + diffX,
+        y: this.nodeStartY + diffY
+      });
+    }
+  }, {
+    key: "handleDoubleClick",
+    value: function handleDoubleClick(event) {
+      this.setState({ editing: true });
     }
   }, {
     key: "handleMouseUp",
     value: function handleMouseUp(event) {
-      if (this.state.dragging) {
+      if (!this.state.editing && this.state.dragging) {
         this.removeDragEventListeners();
         this.setState({ dragging: false });
       }
+    }
+  }, {
+    key: "handleChange",
+    value: function handleChange(event) {
+      this.setState({ name: event.target.value });
     }
   }, {
     key: "addDragEventListeners",
@@ -123,11 +147,11 @@ StatemachineDesigner.State = function (_React$Component) {
   }, {
     key: "getClassName",
     value: function getClassName() {
-      var className = "smd-state";
+      var className = "smd-node";
 
-      if (this.state.dragging) {
-        className += " smd-state--dragging";
-      }
+      if (this.state.dragging) className += " smd-node--dragging";
+
+      if (this.state.editing) className += " smd-node--editing";
 
       return className;
     }
@@ -137,15 +161,35 @@ StatemachineDesigner.State = function (_React$Component) {
       return { left: this.state.x, top: this.state.y };
     }
   }, {
+    key: "getLabel",
+    value: function getLabel() {
+      if (this.state.editing) {
+        return React.createElement("input", {
+          type: "text",
+          value: this.state.name,
+          onChange: this.handleChange.bind(this),
+          className: "smd-node-input"
+        });
+      } else {
+        return React.createElement(
+          "span",
+          null,
+          this.state.name
+        );
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       return React.createElement(
         "div",
         {
+          ref: "node",
           className: this.getClassName(),
           style: this.getStyle(),
+          onDoubleClick: this.handleDoubleClick.bind(this),
           onMouseDown: this.handleMouseDown.bind(this) },
-        this.state.name
+        this.getLabel()
       );
     }
   }]);

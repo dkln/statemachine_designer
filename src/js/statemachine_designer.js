@@ -1,26 +1,26 @@
 class StatemachineDesigner extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { states: [], transitions: [] };
+    this.state = { nodes: [], transitions: [] };
 
     // test
-    this.state.states = [
+    this.state.nodes = [
       { x: 100, y: 100, name: "New" },
       { x: 200, y: 100, name: "Detected" }
     ];
   }
 
   render() {
-    var states = null;
+    var nodes = null;
     var transitions = null;
 
-    states = this.state.states.map(function(state, index) {
+    nodes = this.state.nodes.map(function(node, index) {
       return (
-        <StatemachineDesigner.State
-          key={`state-${index}`}
-          name={state.name}
-          x={state.x}
-          y={state.y}
+        <StatemachineDesigner.Node
+          key={`node-${index}`}
+          name={node.name}
+          x={node.x}
+          y={node.y}
         />
       );
     });
@@ -28,7 +28,7 @@ class StatemachineDesigner extends React.Component {
     return (
       <div className="smd-canvas">
         {transitions}
-        {states}
+        {nodes}
       </div>
     );
   }
