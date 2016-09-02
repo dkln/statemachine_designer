@@ -162,6 +162,22 @@ StatemachineDesigner.Node = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      var strokeWidth = this.state.node.start ? 2 : 1;
+      var endRect;
+
+      if (this.state.node.end) {
+        endRect = React.createElement("rect", {
+          x: 5 / 2,
+          y: 5 / 2,
+          rx: 3,
+          ry: 3,
+          width: this.state.node.width - 5,
+          height: this.state.node.height - 5,
+          fill: this.state.dragging ? "black" : "white",
+          stroke: "black",
+          strokeWidth: "1" });
+      }
+
       return React.createElement(
         "svg",
         {
@@ -171,15 +187,16 @@ StatemachineDesigner.Node = function (_React$Component) {
           onDoubleClick: this.handleDoubleClick.bind(this),
           onMouseDown: this.handleMouseDown.bind(this) },
         React.createElement("rect", {
-          x: 0.5,
-          y: 0.5,
+          x: strokeWidth / 2,
+          y: strokeWidth / 2,
           rx: 5,
           ry: 5,
-          width: this.state.node.width,
-          height: this.state.node.height,
+          width: this.state.node.width - strokeWidth,
+          height: this.state.node.height - strokeWidth,
           fill: this.state.dragging ? "black" : "white",
           stroke: "black",
-          strokeWidth: "1" }),
+          strokeWidth: strokeWidth }),
+        endRect,
         React.createElement(
           "text",
           {
