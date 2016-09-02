@@ -268,6 +268,8 @@ StatemachineDesigner.Transition = function (_React$Component) {
     value: function render() {
       var rotationX = -5;
       var rotationY = -5;
+      var arrowX = this.props.nodeTo.x + this.props.nodeTo.width / 2;
+      var arrowY = this.props.nodeTo.y + this.props.nodeTo.height / 2;
 
       return React.createElement(
         "svg",
@@ -276,18 +278,12 @@ StatemachineDesigner.Transition = function (_React$Component) {
           d: this.getLine(),
           stroke: "black",
           fill: "transparent" }),
-        React.createElement(
-          "svg",
-          {
-            x: this.props.nodeTo.x + this.props.nodeTo.width / 2 + rotationX,
-            y: this.props.nodeTo.y + this.props.nodeTo.height / 2 + rotationY },
-          React.createElement("path", {
-            d: "M 0 10, L 5 0, M 5 0, L 10, 10",
-            stroke: "red",
-            strokeWidth: "2",
-            transform: "rotate(" + (this.getAngle() + 90) + " 5 5)",
-            fill: "transparent" })
-        )
+        React.createElement("path", {
+          d: "M " + (arrowX - 5) + " " + (arrowY + 5) + ", L " + arrowX + " " + (arrowY - 5) + ", M " + arrowX + " " + (arrowY - 5) + ", L " + (arrowX + 5) + ", " + (arrowY + 5),
+          stroke: "red",
+          strokeWidth: "2",
+          transform: "rotate(" + (this.getAngle() + 90) + " " + arrowX + " " + arrowY + ")",
+          fill: "transparent" })
       );
     }
   }]);
