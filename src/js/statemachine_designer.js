@@ -13,7 +13,7 @@ class StatemachineDesigner extends React.Component {
     this.state.transitions = [
       { nodeFrom: 0, nodeTo: 1 },
       { nodeFrom: 1, nodeTo: 2 },
-      //{ nodeFrom: 2, nodeTo: 0 }
+      { nodeFrom: 2, nodeTo: 0 }
     ];
   }
 

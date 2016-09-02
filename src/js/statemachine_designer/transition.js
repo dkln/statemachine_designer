@@ -54,8 +54,8 @@ StatemachineDesigner.Transition = class extends React.Component {
 
         <path
           d={`M ${arrowX - 5} ${arrowY + 5}, L ${arrowX} ${arrowY - 5}, M ${arrowX} ${arrowY - 5}, L ${arrowX + 5}, ${arrowY + 5}`}
-          stroke="red"
-          strokeWidth="2"
+          stroke="black"
+          strokeWidth="1"
           transform={`rotate(${this.getAngle() + 90} ${arrowX} ${arrowY})`}
           fill="transparent" />
       </svg>

@@ -21,7 +21,7 @@ var StatemachineDesigner = function (_React$Component) {
     // test
     _this.state.nodes = [{ x: 100, y: 100, width: 75, height: 25, name: "New" }, { x: 300, y: 100, width: 100, height: 25, name: "Middle" }, { x: 200, y: 100, width: 75, height: 25, name: "Detected" }];
 
-    _this.state.transitions = [{ nodeFrom: 0, nodeTo: 1 }, { nodeFrom: 1, nodeTo: 2 }];
+    _this.state.transitions = [{ nodeFrom: 0, nodeTo: 1 }, { nodeFrom: 1, nodeTo: 2 }, { nodeFrom: 2, nodeTo: 0 }];
     return _this;
   }
 
@@ -286,8 +286,8 @@ StatemachineDesigner.Transition = function (_React$Component) {
           fill: "transparent" }),
         React.createElement("path", {
           d: "M " + (arrowX - 5) + " " + (arrowY + 5) + ", L " + arrowX + " " + (arrowY - 5) + ", M " + arrowX + " " + (arrowY - 5) + ", L " + (arrowX + 5) + ", " + (arrowY + 5),
-          stroke: "red",
-          strokeWidth: "2",
+          stroke: "black",
+          strokeWidth: "1",
           transform: "rotate(" + (this.getAngle() + 90) + " " + arrowX + " " + arrowY + ")",
           fill: "transparent" })
       );
