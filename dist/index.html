@@ -18,7 +18,21 @@
 
     <script type="text/javascript">
       var element = document.getElementById("statemachine-designer");
-      var props = { canvasWidth: 640, canvasHeight: 480 };
+
+      var props = {
+        canvasWidth: 640,
+        canvasHeight: 480,
+        nodes: [
+          { x: 100, y: 100, width: 75, height: 25, name: "New" },
+          { x: 300, y: 100, width: 100, height: 25, name: "Middle" },
+          { x: 200, y: 100, width: 75, height: 25, name: "Detected" }
+        ],
+        transitions: [
+          { nodeFrom: 0, nodeTo: 1 },
+          { nodeFrom: 1, nodeTo: 2 },
+          { nodeFrom: 2, nodeTo: 0 }
+        ]
+      };
 
       ReactDOM.render(React.createElement(StatemachineDesigner, props), element);
     </script>

@@ -16,12 +16,10 @@ var StatemachineDesigner = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(StatemachineDesigner).call(this, props));
 
-    _this.state = { nodes: [], transitions: [] };
-
-    // test
-    _this.state.nodes = [{ x: 100, y: 100, width: 75, height: 25, name: "New" }, { x: 300, y: 100, width: 100, height: 25, name: "Middle" }, { x: 200, y: 100, width: 75, height: 25, name: "Detected" }];
-
-    _this.state.transitions = [{ nodeFrom: 0, nodeTo: 1 }, { nodeFrom: 1, nodeTo: 2 }, { nodeFrom: 2, nodeTo: 0 }];
+    _this.state = {
+      nodes: props.nodes,
+      transitions: props.transitions
+    };
     return _this;
   }
 
