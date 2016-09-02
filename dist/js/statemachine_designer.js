@@ -287,8 +287,6 @@ StatemachineDesigner.Transition = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var size = 0.9;
-
       return React.createElement(
         "svg",
         null,

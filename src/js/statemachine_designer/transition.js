@@ -53,8 +53,6 @@ StatemachineDesigner.Transition = class extends React.Component {
   }
 
   render() {
-    var size = 0.9;
-
     return (
       <svg>
         <path
