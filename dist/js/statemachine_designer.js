@@ -160,17 +160,6 @@ StatemachineDesigner.Node = function (_React$Component) {
       document.removeEventListener("mouseup", this.handleMouseUp);
     }
   }, {
-    key: "getClassName",
-    value: function getClassName() {
-      var className = "smd-node";
-
-      if (this.state.dragging) className += " smd-node--dragging";
-
-      if (this.state.editing) className += " smd-node--editing";
-
-      return className;
-    }
-  }, {
     key: "render",
     value: function render() {
       return React.createElement(
@@ -178,7 +167,7 @@ StatemachineDesigner.Node = function (_React$Component) {
         {
           x: this.state.node.x,
           y: this.state.node.y,
-          className: this.getClassName(),
+          className: "smd-interactive",
           onDoubleClick: this.handleDoubleClick.bind(this),
           onMouseDown: this.handleMouseDown.bind(this) },
         React.createElement("rect", {
@@ -226,7 +215,7 @@ StatemachineDesigner.Transition = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, props));
 
-    _this.state = { size: 0.9 };
+    _this.state = { hover: false };
     return _this;
   }
 
@@ -247,7 +236,9 @@ StatemachineDesigner.Transition = function (_React$Component) {
     key: "getArrowDrawing",
     value: function getArrowDrawing() {
       var p = this.getArrowPosition();
-      return "M " + (p.x - 5) + " " + (p.y + 5) + ", L " + p.x + " " + (p.y - 5) + ", M " + p.x + " " + (p.y - 5) + ", L " + (p.x + 5) + ", " + (p.y + 5);
+      var halfArrowSize = StatemachineDesigner.Transition.ARROW_SIZE / 2;
+
+      return "M " + (p.x - halfArrowSize) + " " + (p.y + halfArrowSize) + ", " + ("L " + p.x + " " + (p.y - halfArrowSize) + ", ") + ("L " + (p.x + halfArrowSize) + " " + (p.y + halfArrowSize) + ", ") + "Z";
     }
   }, {
     key: "getArrowPosition",
@@ -258,8 +249,8 @@ StatemachineDesigner.Transition = function (_React$Component) {
       var nodeToX = this.props.nodeTo.x + this.props.nodeTo.width / 2;
       var nodeToY = this.props.nodeTo.y + this.props.nodeTo.height / 2;
 
-      var arrowX = nodeToX - (nodeToX - nodeFromX) * this.state.size / 2;
-      var arrowY = nodeToY - (nodeToY - nodeFromY) * this.state.size / 2;
+      var arrowX = nodeToX - (nodeToX - nodeFromX) * StatemachineDesigner.Transition.ARROW_OFFSET / 2;
+      var arrowY = nodeToY - (nodeToY - nodeFromY) * StatemachineDesigner.Transition.ARROW_OFFSET / 2;
 
       return { x: arrowX, y: arrowY };
     }
@@ -283,26 +274,42 @@ StatemachineDesigner.Transition = function (_React$Component) {
       return Math.atan2(deltaY, deltaX) * 180 / Math.PI;
     }
   }, {
+    key: "handleMouseEnter",
+    value: function handleMouseEnter(event) {
+      this.setState({ hover: true });
+    }
+  }, {
+    key: "handleMouseLeave",
+    value: function handleMouseLeave(event) {
+      this.setState({ hover: false });
+    }
+  }, {
     key: "render",
     value: function render() {
       return React.createElement(
         "svg",
-        null,
+        {
+          className: "smd-interactive",
+          onMouseEnter: this.handleMouseEnter.bind(this),
+          onMouseLeave: this.handleMouseLeave.bind(this) },
         React.createElement("path", {
           d: this.getLineDrawing(),
-          stroke: "black",
+          stroke: this.state.hover ? "red" : "black",
           fill: "transparent" }),
         React.createElement("path", {
           d: this.getArrowDrawing(),
-          stroke: "black",
+          stroke: this.state.hover ? "red" : "black",
           strokeWidth: "1",
           transform: this.getArrowTransformation(),
-          fill: "transparent" })
+          fill: this.state.hover ? "red" : "black" })
       );
     }
   }]);
 
   return _class;
 }(React.Component);
-;
+
+StatemachineDesigner.Transition.ARROW_SIZE = 15;
+StatemachineDesigner.Transition.ARROW_OFFSET = 0.9;
+
 //# sourceMappingURL=statemachine_designer.js.map

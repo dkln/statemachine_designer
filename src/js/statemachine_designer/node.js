@@ -63,24 +63,12 @@ StatemachineDesigner.Node = class extends React.Component {
     document.removeEventListener("mouseup", this.handleMouseUp);
   }
 
-  getClassName() {
-    var className = "smd-node";
-
-    if(this.state.dragging)
-      className += " smd-node--dragging";
-
-    if(this.state.editing)
-      className += " smd-node--editing";
-
-    return className;
-  }
-
   render() {
     return (
       <svg
         x={this.state.node.x}
         y={this.state.node.y}
-        className={this.getClassName()}
+        className="smd-interactive"
         onDoubleClick={this.handleDoubleClick.bind(this)}
         onMouseDown={this.handleMouseDown.bind(this)}>
 

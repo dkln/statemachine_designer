@@ -2,7 +2,7 @@ StatemachineDesigner.Transition = class extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { size: 0.9 };
+    this.state = { hover: false };
   }
 
   getLineDrawing() {
@@ -19,7 +19,12 @@ StatemachineDesigner.Transition = class extends React.Component {
 
   getArrowDrawing() {
     var p = this.getArrowPosition();
-    return `M ${p.x - 5} ${p.y + 5}, L ${p.x} ${p.y - 5}, M ${p.x} ${p.y - 5}, L ${p.x + 5}, ${p.y + 5}`;
+    var halfArrowSize = StatemachineDesigner.Transition.ARROW_SIZE / 2;
+
+    return `M ${p.x - halfArrowSize} ${p.y + halfArrowSize}, ` +
+           `L ${p.x} ${p.y - halfArrowSize}, ` +
+           `L ${p.x + halfArrowSize} ${p.y + halfArrowSize}, ` +
+           `Z`
   }
 
   getArrowPosition() {
@@ -29,8 +34,8 @@ StatemachineDesigner.Transition = class extends React.Component {
     var nodeToX = this.props.nodeTo.x + this.props.nodeTo.width / 2;
     var nodeToY = this.props.nodeTo.y + this.props.nodeTo.height / 2;
 
-    var arrowX = (nodeToX - (((nodeToX - nodeFromX) * this.state.size) / 2));
-    var arrowY = (nodeToY - (((nodeToY - nodeFromY) * this.state.size) / 2));
+    var arrowX = (nodeToX - (((nodeToX - nodeFromX) * StatemachineDesigner.Transition.ARROW_OFFSET) / 2));
+    var arrowY = (nodeToY - (((nodeToY - nodeFromY) * StatemachineDesigner.Transition.ARROW_OFFSET) / 2));
 
     return { x: arrowX, y: arrowY };
   }
@@ -52,21 +57,35 @@ StatemachineDesigner.Transition = class extends React.Component {
     return Math.atan2(deltaY, deltaX) * 180 / Math.PI;
   }
 
+  handleMouseEnter(event) {
+    this.setState({ hover: true });
+  }
+
+  handleMouseLeave(event) {
+    this.setState({ hover: false });
+  }
+
   render() {
     return (
-      <svg>
+      <svg
+        className="smd-interactive"
+        onMouseEnter={this.handleMouseEnter.bind(this)}
+        onMouseLeave={this.handleMouseLeave.bind(this)}>
         <path
           d={this.getLineDrawing()}
-          stroke="black"
+          stroke={this.state.hover ? "red" : "black"}
           fill="transparent" />
 
         <path
           d={this.getArrowDrawing()}
-          stroke="black"
+          stroke={this.state.hover ? "red" : "black"}
           strokeWidth="1"
           transform={this.getArrowTransformation()}
-          fill="transparent" />
+          fill={this.state.hover ? "red" : "black"} />
       </svg>
     );
   }
 }
+
+StatemachineDesigner.Transition.ARROW_SIZE = 15;
+StatemachineDesigner.Transition.ARROW_OFFSET = 0.9;
