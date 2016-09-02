@@ -5,13 +5,15 @@ class StatemachineDesigner extends React.Component {
 
     // test
     this.state.nodes = [
-      { x: 100, y: 100, name: "New" },
-      { x: 200, y: 100, name: "Detected" }
+      { x: 100, y: 100, width: 75, height: 25, name: "New" },
+      { x: 300, y: 100, width: 100, height: 25, name: "Middle" },
+      { x: 200, y: 100, width: 75, height: 25, name: "Detected" }
     ];
 
     this.state.transitions = [
       { nodeFrom: 0, nodeTo: 1 },
-      { nodeTo: 1, nodeFrom: 0 }
+      { nodeFrom: 1, nodeTo: 2 },
+      //{ nodeFrom: 2, nodeTo: 0 }
     ];
   }
 
@@ -33,6 +35,8 @@ class StatemachineDesigner extends React.Component {
         <StatemachineDesigner.Node
           key={`node-${index}`}
           node={node}
+          canvasWidth={this.props.canvasWidth}
+          canvasHeight={this.props.canvasHeight}
           onNodeChange={this.handleNodeChange.bind(this, index)} />
       );
     });
@@ -47,9 +51,15 @@ class StatemachineDesigner extends React.Component {
     });
 
     return (
-      <svg className="smd-canvas" width={640} height={480}>
-        {transitions}
+      <svg
+        className="smd-canvas"
+        width={this.props.canvasWidth}
+        height={this.props.canvasHeight}>
+
+
         {nodes}
+        {transitions}
+
       </svg>
     );
   }

@@ -3,8 +3,6 @@ StatemachineDesigner.Node = class extends React.Component {
     super(props);
 
     this.state = {
-      width: 75,
-      height: 25,
       node: props.node
     }
 
@@ -91,15 +89,15 @@ StatemachineDesigner.Node = class extends React.Component {
           y={0.5}
           rx={5}
           ry={5}
-          width={this.state.width}
-          height={this.state.height}
+          width={this.state.node.width}
+          height={this.state.node.height}
           fill={this.state.dragging ? "black" : "white"}
           stroke="black"
           strokeWidth="1" />
 
         <text
-          x={this.state.width / 2}
-          y={this.state.height / 2}
+          x={this.state.node.width / 2}
+          y={this.state.node.height / 2}
           fontSize={12}
           alignmentBaseline="middle"
           fill={this.state.dragging ? "white" : "black"}

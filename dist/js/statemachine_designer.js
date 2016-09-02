@@ -19,9 +19,9 @@ var StatemachineDesigner = function (_React$Component) {
     _this.state = { nodes: [], transitions: [] };
 
     // test
-    _this.state.nodes = [{ x: 100, y: 100, name: "New" }, { x: 200, y: 100, name: "Detected" }];
+    _this.state.nodes = [{ x: 100, y: 100, width: 75, height: 25, name: "New" }, { x: 300, y: 100, width: 100, height: 25, name: "Middle" }, { x: 200, y: 100, width: 75, height: 25, name: "Detected" }];
 
-    _this.state.transitions = [{ nodeFrom: 0, nodeTo: 1 }, { nodeTo: 1, nodeFrom: 0 }];
+    _this.state.transitions = [{ nodeFrom: 0, nodeTo: 1 }, { nodeFrom: 1, nodeTo: 2 }];
     return _this;
   }
 
@@ -47,6 +47,8 @@ var StatemachineDesigner = function (_React$Component) {
         return React.createElement(StatemachineDesigner.Node, {
           key: "node-" + index,
           node: node,
+          canvasWidth: _this2.props.canvasWidth,
+          canvasHeight: _this2.props.canvasHeight,
           onNodeChange: _this2.handleNodeChange.bind(_this2, index) });
       });
 
@@ -59,9 +61,12 @@ var StatemachineDesigner = function (_React$Component) {
 
       return React.createElement(
         "svg",
-        { className: "smd-canvas", width: 640, height: 480 },
-        transitions,
-        nodes
+        {
+          className: "smd-canvas",
+          width: this.props.canvasWidth,
+          height: this.props.canvasHeight },
+        nodes,
+        transitions
       );
     }
   }]);
@@ -87,8 +92,6 @@ StatemachineDesigner.Node = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, props));
 
     _this.state = {
-      width: 75,
-      height: 25,
       node: props.node
     };
 
@@ -185,16 +188,16 @@ StatemachineDesigner.Node = function (_React$Component) {
           y: 0.5,
           rx: 5,
           ry: 5,
-          width: this.state.width,
-          height: this.state.height,
+          width: this.state.node.width,
+          height: this.state.node.height,
           fill: this.state.dragging ? "black" : "white",
           stroke: "black",
           strokeWidth: "1" }),
         React.createElement(
           "text",
           {
-            x: this.state.width / 2,
-            y: this.state.height / 2,
+            x: this.state.node.width / 2,
+            y: this.state.node.height / 2,
             fontSize: 12,
             alignmentBaseline: "middle",
             fill: this.state.dragging ? "white" : "black",
@@ -230,9 +233,62 @@ StatemachineDesigner.Transition = function (_React$Component) {
   }
 
   _createClass(_class, [{
+    key: "getLine",
+    value: function getLine() {
+      // start at middle of start node
+      var x1 = this.props.nodeFrom.x + this.props.nodeFrom.width / 2;
+      var y1 = this.props.nodeFrom.y + this.props.nodeFrom.height / 2;
+
+      // end at middle of end node
+      var x2 = this.props.nodeTo.x + this.props.nodeTo.width / 2;
+      var y2 = this.props.nodeTo.y + this.props.nodeTo.height / 2;
+
+      return "M" + x1 + " " + y1 + ", L " + x2 + " " + y2;
+    }
+  }, {
+    key: "getAngle",
+    value: function getAngle() {
+      var x1 = this.props.nodeFrom.x + this.props.nodeFrom.width / 2;
+      var y1 = this.props.nodeFrom.y + this.props.nodeFrom.height / 2;
+      var x2 = this.props.nodeTo.x + this.props.nodeTo.width / 2;
+      var y2 = this.props.nodeTo.y + this.props.nodeTo.height / 2;
+
+      var deltaX = x2 - x1;
+      var deltaY = y2 - y1;
+
+      return Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+    }
+  }, {
+    key: "getArrow",
+    value: function getArrow() {
+      var x1 = this.props.nodeTo;
+    }
+  }, {
     key: "render",
     value: function render() {
-      return React.createElement("div", null);
+      var rotationX = -5;
+      var rotationY = -5;
+
+      return React.createElement(
+        "svg",
+        null,
+        React.createElement("path", {
+          d: this.getLine(),
+          stroke: "black",
+          fill: "transparent" }),
+        React.createElement(
+          "svg",
+          {
+            x: this.props.nodeTo.x + this.props.nodeTo.width / 2 + rotationX,
+            y: this.props.nodeTo.y + this.props.nodeTo.height / 2 + rotationY },
+          React.createElement("path", {
+            d: "M 0 10, L 5 0, M 5 0, L 10, 10",
+            stroke: "red",
+            strokeWidth: "2",
+            transform: "rotate(" + (this.getAngle() + 90) + " 5 5)",
+            fill: "transparent" })
+        )
+      );
     }
   }]);
 
