@@ -56,9 +56,8 @@ class StatemachineDesigner extends React.Component {
         width={this.props.canvasWidth}
         height={this.props.canvasHeight}>
 
-
-        {nodes}
         {transitions}
+        {nodes}
 
       </svg>
     );

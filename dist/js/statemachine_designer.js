@@ -65,8 +65,8 @@ var StatemachineDesigner = function (_React$Component) {
           className: "smd-canvas",
           width: this.props.canvasWidth,
           height: this.props.canvasHeight },
-        nodes,
-        transitions
+        transitions,
+        nodes
       );
     }
   }]);
@@ -266,10 +266,16 @@ StatemachineDesigner.Transition = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var rotationX = -5;
-      var rotationY = -5;
-      var arrowX = this.props.nodeTo.x + this.props.nodeTo.width / 2;
-      var arrowY = this.props.nodeTo.y + this.props.nodeTo.height / 2;
+      var size = 0.9;
+
+      var nodeFromX = this.props.nodeFrom.x + this.props.nodeFrom.width / 2;
+      var nodeFromY = this.props.nodeFrom.y + this.props.nodeFrom.height / 2;
+
+      var nodeToX = this.props.nodeTo.x + this.props.nodeTo.width / 2;
+      var nodeToY = this.props.nodeTo.y + this.props.nodeTo.height / 2;
+
+      var arrowX = nodeToX - (nodeToX - nodeFromX) * size / 2;
+      var arrowY = nodeToY - (nodeToY - nodeFromY) * size / 2;
 
       return React.createElement(
         "svg",
