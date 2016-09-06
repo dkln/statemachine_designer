@@ -3,7 +3,9 @@ StatemachineDesigner.Node = class extends React.Component {
     super(props);
 
     this.state = {
-      node: props.node
+      node: props.node,
+      hover: false,
+      editing: false
     }
 
     // messy js scope bindings
@@ -49,6 +51,14 @@ StatemachineDesigner.Node = class extends React.Component {
     }
   }
 
+  handleMouseEnter(event) {
+    this.setState({ hover: true });
+  }
+
+  handleMouseLeave(event) {
+    this.setState({ hover: false });
+  }
+
   handleChange(event) {
     this.setState({ name: event.target.value });
   }
@@ -66,6 +76,9 @@ StatemachineDesigner.Node = class extends React.Component {
   render() {
     var strokeWidth = this.state.node.start ? 2 : 1;
     var endRect;
+    var borderColor = this.state.hover ? 'red' : 'black';
+    var fillColor = this.state.dragging ? 'red' : 'white';
+    var textColor = this.state.dragging ? 'white' : borderColor;
 
     if(this.state.node.end) {
       endRect = (
@@ -76,8 +89,8 @@ StatemachineDesigner.Node = class extends React.Component {
           ry={3}
           width={this.state.node.width - 5}
           height={this.state.node.height - 5}
-          fill={this.state.dragging ? "black" : "white"}
-          stroke="black"
+          fill={fillColor}
+          stroke={borderColor}
           strokeWidth="1" />
       );
     }
@@ -87,6 +100,8 @@ StatemachineDesigner.Node = class extends React.Component {
         x={this.state.node.x}
         y={this.state.node.y}
         className="smd-interactive"
+        onMouseEnter={this.handleMouseEnter.bind(this)}
+        onMouseLeave={this.handleMouseLeave.bind(this)}
         onDoubleClick={this.handleDoubleClick.bind(this)}
         onMouseDown={this.handleMouseDown.bind(this)}>
 
@@ -97,8 +112,8 @@ StatemachineDesigner.Node = class extends React.Component {
           ry={5}
           width={this.state.node.width - strokeWidth}
           height={this.state.node.height - strokeWidth}
-          fill={this.state.dragging ? "black" : "white"}
-          stroke="black"
+          fill={fillColor}
+          stroke={borderColor}
           strokeWidth={strokeWidth} />
 
         {endRect}
@@ -108,7 +123,7 @@ StatemachineDesigner.Node = class extends React.Component {
           y={this.state.node.height / 2}
           fontSize={12}
           alignmentBaseline="middle"
-          fill={this.state.dragging ? "white" : "black"}
+          fill={textColor}
           textAnchor="middle">
           {this.state.node.name}
         </text>
